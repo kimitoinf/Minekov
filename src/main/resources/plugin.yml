@@ -1,0 +1,17 @@
+name: Minekov
+version: '${version}'
+main: kimit.minekov.Minekov
+api-version: '1.20'
+load: POSTWORLD
+authors: [ Kimit ]
+description: A tarkov-like minecraft bukkit plugin based on skyblock.
+
+commands:
+  raidspawn:
+    description: Set spawn point when player starts raid.
+    usage: /<command> <x> <y> <z>
+    permission: minekov.admin.raidspawn
+  raid:
+    description: Start raid.
+    usage: /<command>
+    permission: minekov.raid
