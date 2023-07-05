@@ -1,19 +1,19 @@
 package kimit.minekov;
 
-import kimit.minekov.Island.IslandEvent;
+import kimit.minekov.Island.IslandEventHandler;
 import kimit.minekov.Market.Market;
+import kimit.minekov.Market.MarketEventHandler;
 import kimit.minekov.PlayerInfo.PlayerInfo;
-import kimit.minekov.util.ConfigFile.ConfigFile;
+import kimit.minekov.PlayerInfo.PlayerInfoEventHandler;
+import kimit.minekov.util.InventoryPage.InventoryPageEventHandler;
 import kimit.minekov.util.InventoryPage.InventoryPageManager;
 import kimit.minekov.util.PrefixLogger;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.checkerframework.checker.units.qual.C;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -26,6 +26,7 @@ public final class Minekov extends JavaPlugin
 	public static InventoryPageManager INVENTORYPAGEMANAGER = new InventoryPageManager();
 	public static Market MARKET;
 	public static RaidSpawn RAIDSPAWN;
+	private final Listener[] EVENTHANDLERS = {new PlayerInfoEventHandler(), new InventoryPageEventHandler(), new MarketEventHandler(), new IslandEventHandler()};
 
 	@Override
 	public void onEnable()
@@ -50,7 +51,8 @@ public final class Minekov extends JavaPlugin
 			PLAYERS.put(uuid, playerInfo);
 		}
 
-		Bukkit.getPluginManager().registerEvents(new IslandEvent(), this);
+		for (Listener loop : EVENTHANDLERS)
+			Bukkit.getPluginManager().registerEvents(loop, this);
 		for (String loop : Commands.COMMANDS)
 			this.getCommand(loop).setExecutor(new Commands());
 	}

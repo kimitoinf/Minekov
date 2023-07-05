@@ -3,6 +3,7 @@ version: '${version}'
 main: kimit.minekov.Minekov
 api-version: '1.20'
 load: POSTWORLD
+depend: [NBTAPI]
 authors: [ Kimit ]
 description: A tarkov-like minecraft bukkit plugin based on skyblock.
 
@@ -15,3 +16,27 @@ commands:
     description: Start raid.
     usage: /<command>
     permission: minekov.raid
+  receive:
+    description: Receive player's item.
+    usage: /<command>
+    permission: minekov.receive
+  market:
+    description: Open market.
+    usage: /<command>
+    permission: minekov.market.market
+  sell:
+    description: Register item to market.
+    usage: /<command>
+    permission: minekov.market.sell
+  getgold:
+    description: Get player's gold.
+    usage: /<command> <player>
+    permission: minekov.admin.getgold
+  setgold:
+    description: Set player's gold.
+    usage: /<command> <player> <gold>
+    permission: minekov.admin.setgold
+  gold:
+    description: Give player gold.
+    usage: /<command> <gold>
+    permission: minekov.gold

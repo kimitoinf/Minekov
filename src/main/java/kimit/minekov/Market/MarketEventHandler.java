@@ -1,7 +1,7 @@
 package kimit.minekov.Market;
 
+import kimit.minekov.Commands;
 import kimit.minekov.Minekov;
-import kimit.minekov.PlayerInfo.PlayerInfoCommand;
 import kimit.minekov.util.InventoryPage.InventoryPage;
 import kimit.minekov.util.Util;
 import org.bukkit.Material;
@@ -24,7 +24,7 @@ public class MarketEventHandler implements Listener
 	@EventHandler
 	public void ClickInventory(InventoryClickEvent e)
 	{
-		if (e.getView().getTitle().equals(Market.NAME) && e.getClickedInventory().equals(e.getView().getBottomInventory()))
+		if (e.getClickedInventory() != null && e.getView().getTitle().equals(Market.NAME) && e.getClickedInventory().equals(e.getView().getBottomInventory()))
 			e.setCancelled(true);
 		else if (e.getView().getTitle().equals(Market.NAME) && Minekov.INVENTORYPAGEMANAGER.getInventoryPages().get(e.getView().getTitle()) != null && e.getClickedInventory() != null && e.getClickedInventory().equals(e.getView().getTopInventory()) && e.getSlot() <= InventoryPage.LIMITPOS && e.getCurrentItem() != null && e.getCurrentItem().getType() != Material.AIR)
 		{
@@ -37,8 +37,8 @@ public class MarketEventHandler implements Listener
 				List<String> lore = meta.getLore();
 				final long price = Long.parseLong(lore.get(1).split(" ")[3]);
 				Player player = (Player) e.getWhoClicked();
-				if (price > Minekov.PLAYERS.get(player.getUniqueId()).getCash())
-					player.sendMessage("구입하고자 하는 물품의 가격이 소지한 현금보다 비싸 구매할 수 없습니다.");
+				if (price > Minekov.PLAYERS.get(player.getUniqueId()).getGold())
+					player.sendMessage("구입하고자 하는 물품의 가격이 소지한 골드보다 비싸 구매할 수 없습니다.");
 				else if (!e.isShiftClick())
 					Minekov.MARKET.PurchaseItem((Player) e.getWhoClicked(), page, index, price, Market.LEFTCLICK);
 				else
@@ -51,7 +51,7 @@ public class MarketEventHandler implements Listener
 	@EventHandler
 	public void CloseInventory(InventoryCloseEvent e)
 	{
-		if (e.getView().getTitle().equals(MarketCommand.SELLINVENTORY))
+		if (e.getView().getTitle().equals(Market.SELLINVENTORY))
 		{
 			Player player = (Player)e.getPlayer();
 			int count = 0;
@@ -69,17 +69,17 @@ public class MarketEventHandler implements Listener
 			else if (count > 1)
 			{
 				player.sendMessage("판매하고자 하는 아이템을 인벤토리 한 칸에 올려놔 주십시오.");
-				player.sendMessage("이전에 올려놓은 아이템은 /" + PlayerInfoCommand.RECEIVE + " 명령어로 다시 받을 수 있습니다.");
+				player.sendMessage("이전에 올려놓은 아이템은 /" + Commands.COMMANDS[2] + " 명령어로 다시 받을 수 있습니다.");
 				for (ItemStack loop : items)
 					Minekov.INVENTORYPAGEMANAGER.getInventoryPages().get(player.getUniqueId().toString()).AddItem(loop);
 			}
 			else
 			{
-				player.sendMessage("아이템 개당 판매 가격을 입려하여 주십시오.");
-				player.sendMessage("수수료는 총 금액의 " + Integer.toString(Market.FEE) + "%가 부과됩니다.");
+				player.sendMessage("아이템 개당 판매 가격을 입력하여 주십시오.");
+				player.sendMessage("수수료는 총 금액의 " + Market.FEE + "%가 부과됩니다.");
 				player.sendMessage("등록을 취소하려면 " + CANCELSELL + " 를 입력하십시오.");
-				Minekov.PLAYERS.get(player.getUniqueId()).MARKETSELL = items;
-				Minekov.PLAYERS.get(player.getUniqueId()).ONMARKETSELL = true;
+				Minekov.PLAYERS.get(player.getUniqueId()).MarketSell = items;
+				Minekov.PLAYERS.get(player.getUniqueId()).OnMarketSell = true;
 			}
 		}
 	}
@@ -87,22 +87,22 @@ public class MarketEventHandler implements Listener
 	@EventHandler
 	public void PlayerChat(AsyncPlayerChatEvent e)
 	{
-		if (Minekov.PLAYERS.get(e.getPlayer().getUniqueId()).ONMARKETSELL)
+		if (Minekov.PLAYERS.get(e.getPlayer().getUniqueId()).OnMarketSell)
 		{
 			Player player = e.getPlayer();
 			if (e.getMessage().equals(CANCELSELL))
 				CancelSell(player);
 			else if (!Util.IsNumberic(e.getMessage()) || Long.parseLong(e.getMessage()) < 0)
 				player.sendMessage("0 이상의 정수로 입력하여 주십시오.");
-			else if ((long)Math.ceil((double)Long.parseLong(e.getMessage()) / Market.FEE) > Minekov.PLAYERS.get(player.getUniqueId()).getCash())
+			else if ((long)Math.ceil((double)Long.parseLong(e.getMessage()) / Market.FEE) > Minekov.PLAYERS.get(player.getUniqueId()).getGold())
 			{
-				player.sendMessage("수수료를 지불할 현금이 부족합니다.");
+				player.sendMessage("수수료를 지불할 골드가 부족합니다.");
 				CancelSell(player);
 			}
 			else
 			{
-				Minekov.MARKET.SellItem(player, Minekov.PLAYERS.get(player.getUniqueId()).MARKETSELL.get(0), Long.parseLong(e.getMessage()));
-				Minekov.PLAYERS.get(player.getUniqueId()).ONMARKETSELL = false;
+				Minekov.MARKET.SellItem(player, Minekov.PLAYERS.get(player.getUniqueId()).MarketSell.get(0), Long.parseLong(e.getMessage()));
+				Minekov.PLAYERS.get(player.getUniqueId()).OnMarketSell = false;
 			}
 			e.setCancelled(true);
 		}
@@ -111,9 +111,10 @@ public class MarketEventHandler implements Listener
 	private void CancelSell(Player player)
 	{
 		player.sendMessage("시장 판매 등록을 취소했습니다.");
-		player.sendMessage("판매하려던 아이템은 /" + PlayerInfoCommand.RECEIVE + " 명령어로 다시 받을 수 있습니다.");
-		for (ItemStack loop : Minekov.PLAYERS.get(player.getUniqueId()).MARKETSELL)
+		player.sendMessage("판매하려던 아이템은 /" + Commands.COMMANDS[2] + " 명령어로 다시 받을 수 있습니다.");
+		for (ItemStack loop : Minekov.PLAYERS.get(player.getUniqueId()).MarketSell)
 			Minekov.INVENTORYPAGEMANAGER.getInventoryPages().get(player.getUniqueId().toString()).AddItem(loop);
-		Minekov.PLAYERS.get(player.getUniqueId()).ONMARKETSELL = false;
+		Minekov.PLAYERS.get(player.getUniqueId()).OnMarketSell = false;
+		Minekov.PLAYERS.get(player.getUniqueId()).UpdateBoard();
 	}
 }
