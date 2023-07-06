@@ -1,6 +1,4 @@
-package kimit.minekov.util.InventoryPage;
-
-import kimit.minekov.util.ConfigFile.ConfigFile;
+package kimit.minekov.Util.InventoryPage;
 
 import java.util.HashMap;
 

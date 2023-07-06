@@ -1,4 +1,4 @@
-package kimit.minekov.util;
+package kimit.minekov.Util;
 
 import java.util.logging.Logger;
 

@@ -1,16 +1,16 @@
-package kimit.minekov;
+package kimit.minekov.Raid;
 
-import kimit.minekov.util.ConfigFile.ConfigFileProvider;
+import kimit.minekov.Util.ConfigFile.ConfigFileProvider;
 import org.bukkit.Location;
 
 import java.util.ArrayList;
 
-public class RaidSpawn extends ConfigFileProvider
+public class RaidPoint extends ConfigFileProvider
 {
 	private static final String COUNT = "Count";
 	public ArrayList<Location> RaidSpawnList = new ArrayList<>();
 
-	public RaidSpawn(String filename)
+	public RaidPoint(String filename)
 	{
 		super(filename);
 		for (int loop = 0; loop != CONFIG.getInt(COUNT); loop++)

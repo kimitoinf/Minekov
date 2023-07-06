@@ -2,7 +2,8 @@ package kimit.minekov.PlayerInfo;
 
 import de.tr7zw.nbtapi.NBTItem;
 import kimit.minekov.Minekov;
-import kimit.minekov.util.ConfigFile.ConfigFileProvider;
+import kimit.minekov.Raid.Raid;
+import kimit.minekov.Util.ConfigFile.ConfigFileProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -31,6 +32,11 @@ public class PlayerInfo extends ConfigFileProvider
 	private Scoreboard Board;
 	private static final String BOARDNAME = "board";
 	public static final Material GOLDMATERIAL = Material.PAPER;
+	public static final String INRAIDCONFIG = "Raid.InRaid";
+	public static final String RAIDTIMECONFIG = "Raid.RaidTime";
+	private boolean InRaid = false;
+	private int RaidTime = 0;
+	public final Raid RAID;
 
 	public PlayerInfo(UUID uuid)
 	{
@@ -43,10 +49,14 @@ public class PlayerInfo extends ConfigFileProvider
 
 		Gold = CONFIG.getLong(GOLDCONFIG);
 
+		InRaid = CONFIG.getBoolean(INRAIDCONFIG);
+		RaidTime = CONFIG.getInt(RAIDTIMECONFIG);
+
 		Board = Bukkit.getScoreboardManager().getNewScoreboard();
 		Objective objective = Board.registerNewObjective(BOARDNAME, Criteria.DUMMY, Minekov.PLUGINNAME);
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 		UpdateBoard();
+		RAID = new Raid(Bukkit.getPlayer(PLAYERUUID));
 	}
 
 	@Override
@@ -58,6 +68,8 @@ public class PlayerInfo extends ConfigFileProvider
 		CONFIG.set(RECEIVECOUNT, items.size());
 		for (int loop = 0; loop != items.size(); loop++)
 			CONFIG.set(RECEIVE + "." + loop, items.get(loop));
+		CONFIG.set(INRAIDCONFIG, InRaid);
+		CONFIG.set(RAIDTIMECONFIG, RaidTime);
 		super.Save();
 	}
 
@@ -67,8 +79,10 @@ public class PlayerInfo extends ConfigFileProvider
 		objective.unregister();
 		objective = Board.registerNewObjective(BOARDNAME, Criteria.DUMMY, Minekov.PLUGINNAME);
 		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-		objective.getScore(ChatColor.GOLD + "Gold: " + Gold).setScore(2);
-		objective.getScore(ChatColor.GRAY + "Receives: " + Minekov.INVENTORYPAGEMANAGER.getInventoryPages().get(PLAYERUUID.toString()).getItems().size()).setScore(1);
+		objective.getScore(ChatColor.GOLD + "Gold: " + Gold).setScore(3);
+		objective.getScore(ChatColor.GRAY + "Receives: " + Minekov.INVENTORYPAGEMANAGER.getInventoryPages().get(PLAYERUUID.toString()).getItems().size()).setScore(2);
+		if (InRaid) objective.getScore(ChatColor.BLUE + "RAID: " + RaidTime / 60 + "m " + RaidTime % 60 + "s").setScore(1);
+		else objective.getScore(ChatColor.BLUE + "RAID: Not in raid.").setScore(1);
 		Bukkit.getPlayer(PLAYERUUID).setScoreboard(Board);
 	}
 
@@ -108,5 +122,26 @@ public class PlayerInfo extends ConfigFileProvider
 	public Scoreboard getBoard()
 	{
 		return Board;
+	}
+
+	public boolean isInRaid()
+	{
+		return InRaid;
+	}
+
+	public void setInRaid(boolean inRaid)
+	{
+		InRaid = inRaid;
+		if (!inRaid) RaidTime = 0;
+	}
+
+	public int getRaidTime()
+	{
+		return RaidTime;
+	}
+
+	public void setRaidTime(int raidTime)
+	{
+		RaidTime = raidTime;
 	}
 }

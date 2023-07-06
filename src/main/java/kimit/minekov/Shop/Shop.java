@@ -1,6 +1,6 @@
 package kimit.minekov.Shop;
 
-import kimit.minekov.util.ConfigFile.ConfigFileProvider;
+import kimit.minekov.Util.ConfigFile.ConfigFileProvider;
 
 public class Shop extends ConfigFileProvider
 {

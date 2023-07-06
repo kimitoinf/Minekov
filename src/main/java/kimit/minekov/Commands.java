@@ -2,7 +2,7 @@ package kimit.minekov;
 
 import kimit.minekov.Market.Market;
 import kimit.minekov.PlayerInfo.PlayerInfo;
-import kimit.minekov.util.Util;
+import kimit.minekov.Util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -11,9 +11,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.Random;
 
 public class Commands implements CommandExecutor
 {
@@ -75,24 +72,13 @@ public class Commands implements CommandExecutor
 				player.sendMessage("Error: No raid spawn point. contact admin.");
 			else
 			{
-				player.sendMessage(ChatColor.BOLD + "Start raid in 5 seconds.");
-				new BukkitRunnable()
+				PlayerInfo playerInfo = Minekov.PLAYERS.get(player.getUniqueId());
+				if (playerInfo.isInRaid()) player.sendMessage(ChatColor.RED + "You are already in raid.");
+				else
 				{
-					private int Count = 5;
-					@Override
-					public void run()
-					{
-						player.resetTitle();
-						player.sendTitle(Integer.toString(Count), null, 10, 70, 20);
-						Count--;
-						if (Count < 0)
-						{
-							player.resetTitle();
-							this.cancel();
-							player.teleport(Minekov.RAIDSPAWN.RaidSpawnList.get(new Random().nextInt(Minekov.RAIDSPAWN.RaidSpawnList.size())));
-						}
-					}
-				}.runTaskTimer(Bukkit.getPluginManager().getPlugin(Minekov.PLUGINNAME), 0, 20);
+					player.sendMessage(ChatColor.BOLD + "Start raid in 5 seconds.");
+					playerInfo.RAID.Start();
+				}
 			}
 		}
 	}

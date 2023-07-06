@@ -2,8 +2,8 @@ package kimit.minekov.Market;
 
 import kimit.minekov.Commands;
 import kimit.minekov.Minekov;
-import kimit.minekov.util.InventoryPage.InventoryPage;
-import kimit.minekov.util.Util;
+import kimit.minekov.Util.InventoryPage.InventoryPage;
+import kimit.minekov.Util.Util;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

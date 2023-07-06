@@ -1,4 +1,4 @@
-package kimit.minekov.util.InventoryPage;
+package kimit.minekov.Util.InventoryPage;
 
 import kimit.minekov.Minekov;
 import kimit.minekov.PlayerInfo.PlayerInfo;

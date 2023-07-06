@@ -1,4 +1,4 @@
-package kimit.minekov.util.ConfigFile;
+package kimit.minekov.Util.ConfigFile;
 
 import kimit.minekov.Minekov;
 import org.bukkit.Bukkit;

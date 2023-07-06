@@ -1,4 +1,4 @@
-package kimit.minekov.util.InventoryPage;
+package kimit.minekov.Util.InventoryPage;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

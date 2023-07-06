@@ -4,7 +4,6 @@ import de.tr7zw.nbtapi.NBTItem;
 import kimit.minekov.Commands;
 import kimit.minekov.Minekov;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,11 +28,16 @@ public class PlayerInfoEventHandler implements Listener
 			player.sendMessage(ChatColor.BOLD + "수신함에 받지 않은 아이템이 " + count + "종류 있습니다.");
 			player.sendMessage(ChatColor.BOLD + "/" + Commands.COMMANDS[2] + " 명령어로 받을 수 있습니다.");
 		}
+		PlayerInfo playerInfo = Minekov.PLAYERS.get(player.getUniqueId());
+		if (playerInfo.isInRaid())
+			playerInfo.RAID.Resume();
 	}
 
 	@EventHandler
 	public void OnQuit(PlayerQuitEvent e)
 	{
+		if (Minekov.PLAYERS.get(e.getPlayer().getUniqueId()).isInRaid())
+			Minekov.PLAYERS.get(e.getPlayer().getUniqueId()).RAID.Pause();
 		Minekov.PLAYERS.get(e.getPlayer().getUniqueId()).Save();
 		Minekov.PLAYERS.remove(e.getPlayer().getUniqueId());
 	}
