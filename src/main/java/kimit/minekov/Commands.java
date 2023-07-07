@@ -1,20 +1,29 @@
 package kimit.minekov;
 
+import de.tr7zw.nbtapi.NBTItem;
 import kimit.minekov.Market.Market;
 import kimit.minekov.PlayerInfo.PlayerInfo;
+import kimit.minekov.Raid.RaidLoot;
 import kimit.minekov.Util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.List;
 
 public class Commands implements CommandExecutor
 {
-	public static final String[] COMMANDS = {"raidspawn", "raid", "receive", "market", "sell", "getgold", "setgold", "gold"};
+	public static final String[] COMMANDS = {"raidspawn", "raid", "receive", "market", "sell", "getgold", "setgold", "gold", "lootitem"};
 	private static final String ARGUMENTSERROR = "Invalid arguments.";
 
 	@Override
@@ -36,6 +45,8 @@ public class Commands implements CommandExecutor
 			SetGoldCommand(sender, args);
 		else if (label.equals(COMMANDS[7]))
 			GoldCommand(sender, args);
+		else if (label.equals(COMMANDS[8]))
+			LootItemCommand(sender);
 
 		return true;
 	}
@@ -166,5 +177,27 @@ public class Commands implements CommandExecutor
 		}
 		else
 			sender.sendMessage("Only player can execute this command.");
+	}
+
+	private void LootItemCommand(CommandSender sender)
+	{
+		if (sender instanceof Player)
+		{
+			for (int loop = 0; loop != 9; loop++)
+				Util.GiveItem((Player)sender, new RaidLoot().GetLootItem());
+			ItemStack item = new ItemStack(Material.DIAMOND_AXE);
+			item.addEnchantment(Enchantment.DAMAGE_ALL, 5);
+			item.addEnchantment(Enchantment.DURABILITY, 3);
+			ItemMeta meta = item.getItemMeta();
+			meta.setLore(List.of("asdf"));
+			item.setItemMeta(meta);
+			Damageable meta2 = (Damageable)item.getItemMeta();
+			meta2.setDamage(10);
+			item.setItemMeta(meta2);
+			NBTItem nbt = new NBTItem(item);
+			nbt.setString("asdf", "qwer");
+			nbt.applyNBT(item);
+			Util.GiveItem((Player)sender, item);
+		}
 	}
 }

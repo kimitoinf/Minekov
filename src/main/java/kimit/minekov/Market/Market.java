@@ -51,6 +51,7 @@ public class Market extends ConfigFileProvider
 		lore.add("개당 가격 : " + price);
 		lore.add("좌클릭으로 " + LEFTCLICK + "개 구매");
 		lore.add("SHIFT + 좌클릭으로 " + SHIFTLEFTCLICK + "개 구매");
+		lore.addAll(meta.getLore());
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbt = new NBTItem(item);
@@ -69,9 +70,7 @@ public class Market extends ConfigFileProvider
 		ItemStack item = Minekov.MARKET.MARKET.getInventories().get(page).getItem(index).clone();
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		String name = lore.get(0).split(" ")[2];
-		lore.clear();
-		meta.setLore(lore);
+		meta.setLore(lore.subList(4, lore.size())); // need to test
 		item.setItemMeta(meta);
 		if (item.getAmount() > count)
 			item.setAmount(count);

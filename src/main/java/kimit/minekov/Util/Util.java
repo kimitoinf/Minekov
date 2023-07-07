@@ -40,4 +40,17 @@ public class Util
 		File folder = new File(path);
 		if (!folder.exists()) folder.mkdir();
 	}
+
+	public static int GetRandom(double[] probabilities)
+	{
+		double random = Math.random();
+		double sum = 0;
+		for (int loop = 0; loop != probabilities.length; loop++)
+		{
+			sum += probabilities[loop];
+			if (sum > random)
+				return loop;
+		}
+		return -1;
+	}
 }

@@ -47,7 +47,7 @@ public class Raid
 
 	public void Cancel()
 	{
-		if (!RaidTimer.isCancelled())
+		if (RaidTimer != null && !RaidTimer.isCancelled())
 			RaidTimer.cancel();
 		PlayerInfo playerInfo = Minekov.PLAYERS.get(PLAYER.getUniqueId());
 		playerInfo.setInRaid(false);
