@@ -8,26 +8,22 @@ authors: [ Kimit ]
 description: A tarkov-like minecraft bukkit plugin based on skyblock.
 
 commands:
-  raidspawn:
-    description: Set spawn point when player starts raid.
+  spawn:
+    description: Set spawn point of raid.
     usage: /<command> <x> <y> <z>
-    permission: minekov.admin.raidspawn
+    permission: minekov.admin.spawn
+  escape:
+    description: Set escape point of raid.
+    usage: /<command> <x> <y> <z>
+    permission: minekov.admin.escape
+  loot:
+    description: Set looting point of raid.
+    usage: /<command> <x> <y> <z>
+    permission: minekov.admin.loot
   raid:
     description: Start raid.
     usage: /<command>
     permission: minekov.raid
-  receive:
-    description: Receive player's item.
-    usage: /<command>
-    permission: minekov.receive
-  market:
-    description: Open market.
-    usage: /<command>
-    permission: minekov.market.market
-  sell:
-    description: Register item to market.
-    usage: /<command>
-    permission: minekov.market.sell
   getgold:
     description: Get player's gold.
     usage: /<command> <player>
@@ -44,3 +40,19 @@ commands:
     description: Give player a random looting item.
     usage: /<command>
     permission: minekov.admin.lootitem
+  lootchest:
+    description: Place looting chests.
+    usage: /<command>
+    permission: minekov.admin.lootchest
+  receive:
+    description: Receive player's item.
+    usage: /<command>
+    permission: minekov.receive
+  market:
+    description: Open market.
+    usage: /<command>
+    permission: minekov.market.market
+  sell:
+    description: Register item to market.
+    usage: /<command>
+    permission: minekov.market.sell

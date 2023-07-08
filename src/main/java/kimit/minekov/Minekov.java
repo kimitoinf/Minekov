@@ -30,7 +30,7 @@ public final class Minekov extends JavaPlugin
 	public static InventoryPageManager INVENTORYPAGEMANAGER = new InventoryPageManager();
 	public static Market MARKET;
 	public static final String RAIDFOLDER = File.separator + "Raid";
-	public static RaidPoint RAIDSPAWN;
+	public static RaidPoint RAIDSPAWN, RAIDESCAPE, RAIDLOOT;
 	public static RaidConfig RAIDCONFIG;
 	private final Listener[] EVENTHANDLERS = {new PlayerInfoEventHandler(), new InventoryPageEventHandler(), new MarketEventHandler(), new IslandEventHandler(), new RaidEventHandler()};
 
@@ -42,16 +42,11 @@ public final class Minekov extends JavaPlugin
 
 		final String[] folders = {getDataFolder().toString(), getDataFolder().toString() + PLAYERSFOLDER, getDataFolder().toString() + RAIDFOLDER};
 		for (String loop : folders) Util.MakeFolder(loop);
-		/*
-		File dataFolder = new File(getDataFolder().toString());
-		if (!dataFolder.exists())
-			dataFolder.mkdir();
-		File playersFolder = new File(getDataFolder().toString() + PLAYERSFOLDER);
-		if (!playersFolder.exists())
-			playersFolder.mkdir();*/
 
 		MARKET = new Market("Market.yml");
 		RAIDSPAWN = new RaidPoint(RAIDFOLDER + File.separator + "RaidSpawn.yml");
+		RAIDESCAPE = new RaidPoint(RAIDFOLDER + File.separator + "RaidEscape.yml");
+		RAIDLOOT = new RaidPoint(RAIDFOLDER + File.separator + "RaidLoot.yml");
 		RAIDCONFIG = new RaidConfig(RAIDFOLDER + File.separator + "RaidConfig.yml");
 
 		for (Player player : Bukkit.getServer().getOnlinePlayers())
@@ -78,6 +73,8 @@ public final class Minekov extends JavaPlugin
 
 		MARKET.Save();
 		RAIDSPAWN.Save();
+		RAIDESCAPE.Save();
+		RAIDLOOT.Save();
 		RAIDCONFIG.Save();
 	}
 }

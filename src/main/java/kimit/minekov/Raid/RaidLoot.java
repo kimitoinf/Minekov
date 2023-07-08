@@ -6,6 +6,7 @@ import kimit.minekov.Util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -16,8 +17,7 @@ import org.bukkit.potion.PotionType;
 import java.util.List;
 import java.util.Random;
 
-public class RaidLoot
-{
+public class RaidLoot {
 	public static final Material[][] ITEM_LOOT = {
 			{
 					Material.WOODEN_SWORD, Material.WOODEN_AXE, Material.WOODEN_SHOVEL, Material.WOODEN_PICKAXE,
@@ -111,60 +111,60 @@ public class RaidLoot
 	};
 	public static final Enchantment[][][] ENCHANTMENTS = {
 			{
-					{ Enchantment.DAMAGE_ARTHROPODS, Enchantment.KNOCKBACK, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD },
-					{ Enchantment.DAMAGE_ARTHROPODS, Enchantment.KNOCKBACK, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD },
-					{ Enchantment.DURABILITY, Enchantment.DAMAGE_ARTHROPODS, Enchantment.FIRE_ASPECT, Enchantment.LOOT_BONUS_MOBS, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD, Enchantment.SWEEPING_EDGE },
-					{ Enchantment.DURABILITY, Enchantment.DAMAGE_ARTHROPODS, Enchantment.FIRE_ASPECT, Enchantment.LOOT_BONUS_MOBS, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD, Enchantment.SWEEPING_EDGE },
-					{ Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.DAMAGE_ARTHROPODS, Enchantment.LOOT_BONUS_MOBS, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD, Enchantment.SWEEPING_EDGE }
+					{Enchantment.DAMAGE_ARTHROPODS, Enchantment.KNOCKBACK, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD},
+					{Enchantment.DAMAGE_ARTHROPODS, Enchantment.KNOCKBACK, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD},
+					{Enchantment.DURABILITY, Enchantment.DAMAGE_ARTHROPODS, Enchantment.FIRE_ASPECT, Enchantment.LOOT_BONUS_MOBS, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD, Enchantment.SWEEPING_EDGE},
+					{Enchantment.DURABILITY, Enchantment.DAMAGE_ARTHROPODS, Enchantment.FIRE_ASPECT, Enchantment.LOOT_BONUS_MOBS, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD, Enchantment.SWEEPING_EDGE},
+					{Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.DAMAGE_ARTHROPODS, Enchantment.LOOT_BONUS_MOBS, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD, Enchantment.SWEEPING_EDGE}
 			},
 			{
-					{ Enchantment.DAMAGE_ARTHROPODS, Enchantment.DIG_SPEED, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD },
-					{ Enchantment.DAMAGE_ARTHROPODS, Enchantment.DIG_SPEED, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD },
-					{ Enchantment.DURABILITY, Enchantment.DAMAGE_ARTHROPODS, Enchantment.DIG_SPEED, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD },
-					{ Enchantment.DURABILITY, Enchantment.DAMAGE_ARTHROPODS, Enchantment.DIG_SPEED, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD },
-					{ Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.DAMAGE_ARTHROPODS, Enchantment.DIG_SPEED, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD }
+					{Enchantment.DAMAGE_ARTHROPODS, Enchantment.DIG_SPEED, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD},
+					{Enchantment.DAMAGE_ARTHROPODS, Enchantment.DIG_SPEED, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD},
+					{Enchantment.DURABILITY, Enchantment.DAMAGE_ARTHROPODS, Enchantment.DIG_SPEED, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD},
+					{Enchantment.DURABILITY, Enchantment.DAMAGE_ARTHROPODS, Enchantment.DIG_SPEED, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD},
+					{Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.DAMAGE_ARTHROPODS, Enchantment.DIG_SPEED, Enchantment.DAMAGE_ALL, Enchantment.DAMAGE_UNDEAD}
 			},
 			{
-					{ Enchantment.DIG_SPEED },
-					{ Enchantment.DIG_SPEED },
-					{ Enchantment.DURABILITY, Enchantment.DIG_SPEED },
-					{ Enchantment.DURABILITY, Enchantment.DIG_SPEED },
-					{ Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.DIG_SPEED }
+					{Enchantment.DIG_SPEED},
+					{Enchantment.DIG_SPEED},
+					{Enchantment.DURABILITY, Enchantment.DIG_SPEED},
+					{Enchantment.DURABILITY, Enchantment.DIG_SPEED},
+					{Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.DIG_SPEED}
 			},
 			{
-					{ Enchantment.DIG_SPEED },
-					{ Enchantment.DIG_SPEED },
-					{ Enchantment.DURABILITY, Enchantment.DIG_SPEED },
-					{ Enchantment.DURABILITY, Enchantment.DIG_SPEED },
-					{ Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.DIG_SPEED }
+					{Enchantment.DIG_SPEED},
+					{Enchantment.DIG_SPEED},
+					{Enchantment.DURABILITY, Enchantment.DIG_SPEED},
+					{Enchantment.DURABILITY, Enchantment.DIG_SPEED},
+					{Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.DIG_SPEED}
 			},
 			{
-					{ Enchantment.ARROW_DAMAGE },
-					{ Enchantment.ARROW_DAMAGE },
-					{ Enchantment.DURABILITY, Enchantment.ARROW_DAMAGE },
-					{ Enchantment.DURABILITY, Enchantment.ARROW_FIRE, Enchantment.ARROW_DAMAGE, Enchantment.ARROW_KNOCKBACK },
-					{ Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.ARROW_INFINITE, Enchantment.ARROW_DAMAGE, Enchantment.ARROW_KNOCKBACK }
-			},
-			{
-					{},
-					{},
-					{ Enchantment.DURABILITY, Enchantment.LOYALTY },
-					{ Enchantment.DURABILITY, Enchantment.LOYALTY },
-					{ Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.LOYALTY }
+					{Enchantment.ARROW_DAMAGE},
+					{Enchantment.ARROW_DAMAGE},
+					{Enchantment.DURABILITY, Enchantment.ARROW_DAMAGE},
+					{Enchantment.DURABILITY, Enchantment.ARROW_FIRE, Enchantment.ARROW_DAMAGE, Enchantment.ARROW_KNOCKBACK},
+					{Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.ARROW_INFINITE, Enchantment.ARROW_DAMAGE, Enchantment.ARROW_KNOCKBACK}
 			},
 			{
 					{},
-					{ Enchantment.PIERCING },
-					{ Enchantment.DURABILITY, Enchantment.PIERCING, Enchantment.QUICK_CHARGE },
-					{ Enchantment.DURABILITY, Enchantment.PIERCING, Enchantment.QUICK_CHARGE },
-					{ Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.PIERCING, Enchantment.QUICK_CHARGE, Enchantment.MULTISHOT }
+					{},
+					{Enchantment.DURABILITY, Enchantment.LOYALTY},
+					{Enchantment.DURABILITY, Enchantment.LOYALTY},
+					{Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.LOYALTY}
 			},
 			{
 					{},
-					{ Enchantment.PROTECTION_EXPLOSIONS, Enchantment.PROTECTION_FIRE, Enchantment.PROTECTION_PROJECTILE, Enchantment.PROTECTION_ENVIRONMENTAL },
-					{ Enchantment.DURABILITY, Enchantment.PROTECTION_EXPLOSIONS, Enchantment.PROTECTION_FIRE, Enchantment.PROTECTION_PROJECTILE, Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.THORNS },
-					{ Enchantment.DURABILITY, Enchantment.PROTECTION_EXPLOSIONS, Enchantment.PROTECTION_FIRE, Enchantment.PROTECTION_PROJECTILE, Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.THORNS },
-					{ Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.PROTECTION_EXPLOSIONS, Enchantment.PROTECTION_FIRE, Enchantment.PROTECTION_PROJECTILE, Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.THORNS },
+					{Enchantment.PIERCING},
+					{Enchantment.DURABILITY, Enchantment.PIERCING, Enchantment.QUICK_CHARGE},
+					{Enchantment.DURABILITY, Enchantment.PIERCING, Enchantment.QUICK_CHARGE},
+					{Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.PIERCING, Enchantment.QUICK_CHARGE, Enchantment.MULTISHOT}
+			},
+			{
+					{},
+					{Enchantment.PROTECTION_EXPLOSIONS, Enchantment.PROTECTION_FIRE, Enchantment.PROTECTION_PROJECTILE, Enchantment.PROTECTION_ENVIRONMENTAL},
+					{Enchantment.DURABILITY, Enchantment.PROTECTION_EXPLOSIONS, Enchantment.PROTECTION_FIRE, Enchantment.PROTECTION_PROJECTILE, Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.THORNS},
+					{Enchantment.DURABILITY, Enchantment.PROTECTION_EXPLOSIONS, Enchantment.PROTECTION_FIRE, Enchantment.PROTECTION_PROJECTILE, Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.THORNS},
+					{Enchantment.MENDING, Enchantment.DURABILITY, Enchantment.PROTECTION_EXPLOSIONS, Enchantment.PROTECTION_FIRE, Enchantment.PROTECTION_PROJECTILE, Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.THORNS},
 			}
 	};
 	public static final int[][][] ENCHANTMENT_LEVELS = {
@@ -225,10 +225,19 @@ public class RaidLoot
 					{1, 3, 4, 4, 4, 4, 3}
 			}
 	};
-	public static final String[] WEAPONS = { "SWORD", "AXE", "SHOVEL", "PICKAXE" };
-	public static final String[] ARMORS = { "HELMET", "CHESTPLATE", "LEGGINGS", "BOOTS" };
-	public static final String[] EQUIPMENTS = { "SWORD", "AXE", "SHOVEL", "PICKAXE", "BOW", "TRIDENT", "CROSSBOW", "HELMET", "CHESTPLATE", "LEGGINGS", "BOOTS" };
+	public static final String[] WEAPONS = {"SWORD", "AXE", "SHOVEL", "PICKAXE"};
+	public static final String[] ARMORS = {"HELMET", "CHESTPLATE", "LEGGINGS", "BOOTS"};
+	public static final String[] EQUIPMENTS = {"SWORD", "AXE", "SHOVEL", "PICKAXE", "BOW", "TRIDENT", "CROSSBOW", "HELMET", "CHESTPLATE", "LEGGINGS", "BOOTS"};
 	public static final String RANK = "Rank";
+
+	public ItemStack[] GetLootChest()
+	{
+		int items = Util.GetRandom(Minekov.RAIDCONFIG.V_ITEMS_PER_CHEST);
+		ItemStack[] chest = new ItemStack[items];
+		for (int loop = 0; loop != items; loop++)
+			chest[loop] = GetLootItem();
+		return chest;
+	}
 
 	public ItemStack GetLootItem()
 	{
