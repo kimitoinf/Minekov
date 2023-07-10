@@ -56,3 +56,7 @@ commands:
     description: Register item to market.
     usage: /<command>
     permission: minekov.market.sell
+  shop:
+    description: Open shop.
+    usage: /<command>
+    permission: minekov.shop

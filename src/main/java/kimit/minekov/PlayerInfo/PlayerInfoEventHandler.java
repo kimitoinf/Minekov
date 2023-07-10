@@ -1,9 +1,11 @@
 package kimit.minekov.PlayerInfo;
 
+import de.tr7zw.nbtapi.NBTCompound;
 import de.tr7zw.nbtapi.NBTItem;
 import kimit.minekov.Commands;
 import kimit.minekov.Minekov;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

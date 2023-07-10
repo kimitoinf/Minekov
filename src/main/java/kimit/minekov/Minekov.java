@@ -1,5 +1,7 @@
 package kimit.minekov;
 
+import de.tr7zw.nbtapi.NBTCompound;
+import de.tr7zw.nbtapi.NBTItem;
 import kimit.minekov.Island.IslandEventHandler;
 import kimit.minekov.Market.Market;
 import kimit.minekov.Market.MarketEventHandler;
@@ -7,7 +9,10 @@ import kimit.minekov.PlayerInfo.PlayerInfo;
 import kimit.minekov.PlayerInfo.PlayerInfoEventHandler;
 import kimit.minekov.Raid.RaidConfig;
 import kimit.minekov.Raid.RaidEventHandler;
+import kimit.minekov.Raid.RaidInitializer;
 import kimit.minekov.Raid.RaidPoint;
+import kimit.minekov.Shop.Shop;
+import kimit.minekov.Shop.ShopEventHandler;
 import kimit.minekov.Util.InventoryPage.InventoryPageEventHandler;
 import kimit.minekov.Util.InventoryPage.InventoryPageManager;
 import kimit.minekov.Util.PrefixLogger;
@@ -32,7 +37,9 @@ public final class Minekov extends JavaPlugin
 	public static final String RAIDFOLDER = File.separator + "Raid";
 	public static RaidPoint RAIDSPAWN, RAIDESCAPE, RAIDLOOT;
 	public static RaidConfig RAIDCONFIG;
-	private final Listener[] EVENTHANDLERS = {new PlayerInfoEventHandler(), new InventoryPageEventHandler(), new MarketEventHandler(), new IslandEventHandler(), new RaidEventHandler()};
+	private RaidInitializer Initializer;
+	public static Shop Shop;
+	private final Listener[] EVENTHANDLERS = {new PlayerInfoEventHandler(), new InventoryPageEventHandler(), new MarketEventHandler(), new IslandEventHandler(), new RaidEventHandler(), new ShopEventHandler()};
 
 	@Override
 	public void onEnable()
@@ -48,6 +55,9 @@ public final class Minekov extends JavaPlugin
 		RAIDESCAPE = new RaidPoint(RAIDFOLDER + File.separator + "RaidEscape.yml");
 		RAIDLOOT = new RaidPoint(RAIDFOLDER + File.separator + "RaidLoot.yml");
 		RAIDCONFIG = new RaidConfig(RAIDFOLDER + File.separator + "RaidConfig.yml");
+		Initializer = new RaidInitializer(PLUGINNAME);
+		Initializer.Start(RAIDCONFIG.V_RAID_TIME, RAIDLOOT);
+		Shop = new Shop("Shop.yml");
 
 		for (Player player : Bukkit.getServer().getOnlinePlayers())
 		{
@@ -76,5 +86,6 @@ public final class Minekov extends JavaPlugin
 		RAIDESCAPE.Save();
 		RAIDLOOT.Save();
 		RAIDCONFIG.Save();
+		Shop.Save();
 	}
 }

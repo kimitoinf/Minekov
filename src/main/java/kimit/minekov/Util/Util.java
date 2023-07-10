@@ -53,4 +53,12 @@ public class Util
 		}
 		return -1;
 	}
+
+	public static int IsContain(String dest, String[] compare)
+	{
+		for (int loop = 0; loop != compare.length; loop++)
+			if (dest.contains(compare[loop]))
+				return loop;
+		return -1;
+	}
 }

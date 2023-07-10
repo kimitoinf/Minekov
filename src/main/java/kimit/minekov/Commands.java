@@ -19,7 +19,7 @@ import org.bukkit.inventory.Inventory;
 
 public class Commands implements CommandExecutor
 {
-	public static final String[] COMMANDS = {"spawn", "escape", "loot", "raid", "getgold", "setgold", "gold", "lootitem", "lootchest", "receive", "market", "sell"};
+	public static final String[] COMMANDS = {"spawn", "escape", "loot", "raid", "getgold", "setgold", "gold", "lootitem", "lootchest", "receive", "market", "sell", "shop"};
 	public static final Executor[] EXECUTORS = {new RaidPointExecutor(Minekov.RAIDSPAWN), new RaidPointExecutor(Minekov.RAIDESCAPE), new RaidPointExecutor(Minekov.RAIDLOOT),
 			new Executor()
 			{
@@ -105,7 +105,7 @@ public class Commands implements CommandExecutor
 						}
 					}
 					else
-						sender.sendMessage("Only player can execute this command.");
+						sender.sendMessage(NOT_PLAYER_ERROR);
 				}
 			},
 			new Executor()
@@ -177,6 +177,15 @@ public class Commands implements CommandExecutor
 						player.openInventory(inventory);
 					}
 				}
+			},
+			new Executor()
+			{
+				@Override
+				public void Run(CommandSender sender, String[] args)
+				{
+					if (sender instanceof Player) ((Player)sender).openInventory(Minekov.Shop.getShop());
+					else sender.sendMessage(NOT_PLAYER_ERROR);
+				}
 			}
 	};
 
@@ -194,6 +203,7 @@ public class Commands implements CommandExecutor
 abstract class Executor
 {
 	protected static final String ARGUMENTS_ERROR = "Invalid arguments.";
+	protected static final String NOT_PLAYER_ERROR = "Only player can execute this command.";
 
 	abstract public void Run(CommandSender sender, String[] args);
 }
