@@ -51,7 +51,7 @@ public class Market extends ConfigFileProvider
 		lore.add("개당 가격 : " + price);
 		lore.add("좌클릭으로 " + LEFTCLICK + "개 구매");
 		lore.add("SHIFT + 좌클릭으로 " + SHIFTLEFTCLICK + "개 구매");
-		lore.addAll(meta.getLore());
+		if (meta.hasLore()) lore.addAll(meta.getLore());
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		NBTItem nbt = new NBTItem(item);
@@ -70,7 +70,7 @@ public class Market extends ConfigFileProvider
 		ItemStack item = Minekov.MARKET.MARKET.getInventories().get(page).getItem(index).clone();
 		ItemMeta meta = item.getItemMeta();
 		List<String> lore = meta.getLore();
-		meta.setLore(lore.subList(4, lore.size())); // need to test
+		meta.setLore(lore.subList(4, lore.size()));
 		item.setItemMeta(meta);
 		if (item.getAmount() > count)
 			item.setAmount(count);
@@ -84,7 +84,7 @@ public class Market extends ConfigFileProvider
 		Minekov.PLAYERS.get(player.getUniqueId()).addGold(-total);
 		String message = "아이템 " + item.getType() + " " + count + "개를 " + total + "골드에 구매하였습니다.";
 		player.sendMessage(message);
-		player.sendMessage("구매한 아이템은 /" + Commands.COMMANDS[2] + " 명령어로 받을 수 있습니다.");
+		player.sendMessage("구매한 아이템은 /" + Commands.COMMANDS[9] + " 명령어로 받을 수 있습니다.");
 		Minekov.MARKET.MARKET.RemoveItem(page, index, count);
 		Minekov.PLAYERS.get(player.getUniqueId()).UpdateBoard();
 
@@ -93,7 +93,7 @@ public class Market extends ConfigFileProvider
 			Player sellerPlayer = Bukkit.getPlayer(seller);
 			Minekov.INVENTORYPAGEMANAGER.getInventoryPages().get(seller.toString()).AddItem(PlayerInfo.GoldItem(total));
 			sellerPlayer.sendMessage("플레이어 " + player.getName() + "님이 " + message);
-			sellerPlayer.sendMessage("판매 골드은 /" + Commands.COMMANDS[2] + " 명령어로 받을 수 있습니다.");
+			sellerPlayer.sendMessage("판매 골드은 /" + Commands.COMMANDS[9] + " 명령어로 받을 수 있습니다.");
 			Minekov.PLAYERS.get(sellerPlayer.getUniqueId()).UpdateBoard();
 		}
 		else

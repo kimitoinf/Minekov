@@ -1,12 +1,15 @@
 package kimit.minekov.Shop;
 
+import kimit.minekov.Commands;
 import kimit.minekov.Minekov;
+import kimit.minekov.PlayerInfo.PlayerInfo;
 import kimit.minekov.Raid.RaidConfig;
 import kimit.minekov.Util.ConfigFile.ConfigFileProvider;
 import kimit.minekov.Util.InventoryPage.InventoryPage;
 import kimit.minekov.Util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -26,12 +29,11 @@ public class Shop extends ConfigFileProvider
 	public static final int CLICK = 1;
 	public static final int SHIFT_CLICK = 10;
 	private Inventory SHOP;
-	private final ArrayList<InventoryPage> SHOP_PAGE = new ArrayList<>();
 
 	public static final Material[][] SHOP_ITEM = {
 			{Material.WOODEN_SWORD, Material.GOLDEN_SWORD, Material.STONE_SWORD, Material.IRON_SWORD},
 			{Material.BOW, Material.CROSSBOW, Material.TRIDENT, Material.SHIELD},
-			{Material.WOODEN_AXE, Material.WOODEN_SHOVEL, Material.WOODEN_PICKAXE, Material.GOLDEN_AXE, Material.GOLDEN_SHOVEL, Material.GOLDEN_PICKAXE, Material.STONE_AXE, Material.GOLDEN_SHOVEL, Material.GOLDEN_PICKAXE, Material.IRON_AXE, Material.IRON_SHOVEL, Material.IRON_PICKAXE},
+			{Material.WOODEN_AXE, Material.WOODEN_SHOVEL, Material.WOODEN_PICKAXE, Material.GOLDEN_AXE, Material.GOLDEN_SHOVEL, Material.GOLDEN_PICKAXE, Material.STONE_AXE, Material.STONE_SHOVEL, Material.STONE_PICKAXE, Material.IRON_AXE, Material.IRON_SHOVEL, Material.IRON_PICKAXE},
 			{Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS, Material.GOLDEN_HELMET, Material.GOLDEN_CHESTPLATE, Material.GOLDEN_LEGGINGS, Material.GOLDEN_BOOTS, Material.IRON_HELMET, Material.IRON_CHESTPLATE, Material.IRON_LEGGINGS, Material.IRON_BOOTS},
 			{Material.PUFFERFISH, Material.DRIED_KELP, Material.BEETROOT, Material.SPIDER_EYE, Material.TROPICAL_FISH, Material.POISONOUS_POTATO, Material.COOKIE, Material.GLOW_BERRIES, Material.MELON_SLICE, Material.SWEET_BERRIES},
 			{Material.POTION},
@@ -118,7 +120,7 @@ public class Shop extends ConfigFileProvider
 		SHOP = Bukkit.createInventory(null, 45, NAME);
 		for (int loop = 0; loop != SHOP_NAME.length; loop++)
 		{
-			SHOP_PAGE.add(new InventoryPage(SHOP_NAME[loop]));
+			Minekov.INVENTORYPAGEMANAGER.Register(SHOP_NAME[loop], SHOP_NAME[loop]);
 			ItemStack item = new ItemStack(SHOP_MATERIAL[loop]);
 			ItemMeta meta = item.getItemMeta();
 			meta.setDisplayName(SHOP_NAME[loop]);
@@ -142,7 +144,7 @@ public class Shop extends ConfigFileProvider
 						price = (int)Math.ceil(PRICE_COEFFICIENT * GetValue(material, Minekov.RAIDCONFIG.V_DURABILITY_PROJECTILE_MATERIAL[Util.IsContain(material.name(), RaidConfig.PROJECTILE_MATERIAL)], ITEM_STAT[loop][loop2]));
 						break;
 					case 3:
-						price = (int)Math.ceil(PRICE_COEFFICIENT * GetValue(material, Minekov.RAIDCONFIG.V_DURABILITY_ARMOR_MATERIAL[Util.IsContain(material.name(), RaidConfig.ARMOR_MATERIAL)], ITEM_STAT[loop][loop2]));
+						price = 4 * (int)Math.ceil(PRICE_COEFFICIENT * GetValue(material, Minekov.RAIDCONFIG.V_DURABILITY_ARMOR_MATERIAL[Util.IsContain(material.name(), RaidConfig.ARMOR_MATERIAL)], ITEM_STAT[loop][loop2]));
 						break;
 					case 5:
 						PotionMeta potion = (PotionMeta)meta;
@@ -157,14 +159,15 @@ public class Shop extends ConfigFileProvider
 				}
 				ITEM_PRICES.put(material, price);
 				ArrayList<String> lore = new ArrayList<>();
-				lore.add("개당 가격 : " + price);
+				lore.add("구매 가격 : " + price);
+				lore.add("판매 가격 : " + (int)Math.floor(price * V_SELL_RATE));
 				lore.add("좌클릭으로 " + CLICK + "개 구매");
 				lore.add("SHIFT + 좌클릭으로 " + SHIFT_CLICK + "개 구매");
 				lore.add("우클릭으로 " + CLICK + "개 판매");
 				lore.add("SHIFT + 우클릭으로 모두 판매");
 				meta.setLore(lore);
 				item.setItemMeta(meta);
-				SHOP_PAGE.get(loop).AddItem(item);
+				Minekov.INVENTORYPAGEMANAGER.getInventoryPages().get(SHOP_NAME[loop]).AddItem(item);
 			}
 		}
 	}
@@ -185,14 +188,62 @@ public class Shop extends ConfigFileProvider
 		return value;
 	}
 
+	public void SellItem(Player player, String shopName, int page, int index, boolean isShift)
+	{
+		final ItemStack item = Minekov.INVENTORYPAGEMANAGER.getInventoryPages().get(shopName).getInventories().get(page).getItem(index).clone();
+		final Material material = item.getType();
+		int count = 0;
+		for (ItemStack loop : player.getInventory().getContents())
+			if(loop != null && loop.getType().equals(material))
+				count += loop.getAmount();
+		if (count == 0)
+		{
+			player.sendMessage("해당 아이템이 없습니다.");
+			return;
+		}
+		ItemMeta meta = item.getItemMeta();
+		final int price = isShift ? count * Integer.parseInt(meta.getLore().get(1).split(" ")[3]) : Integer.parseInt(meta.getLore().get(1).split(" ")[3]);
+		meta.setLore(null);
+		item.setItemMeta(meta);
+		ItemStack[] contents = player.getInventory().getContents();
+		for (int loop = 0; loop != contents.length; loop++)
+		{
+			if (contents[loop] != null && contents[loop].getType().equals(material))
+			{
+				contents[loop].setAmount(contents[loop].getAmount() - 1);
+				if (!isShift) break;
+			}
+		}
+		PlayerInfo playerInfo = Minekov.PLAYERS.get(player.getUniqueId());
+		playerInfo.addGold(price);
+		playerInfo.UpdateBoard();
+		player.sendMessage("아이템 " + item.getType() + " " + (isShift ? count : CLICK) + "개를 " + price + "골드에 판매하였습니다.");
+	}
+
+	public void PurchaseItem(Player player, String shopName, int page, int index, boolean isShift)
+	{
+		ItemStack item = Minekov.INVENTORYPAGEMANAGER.getInventoryPages().get(shopName).getInventories().get(page).getItem(index).clone();
+		ItemMeta meta = item.getItemMeta();
+		final int price = isShift ? SHIFT_CLICK * Integer.parseInt(meta.getLore().get(0).split(" ")[3]) : Integer.parseInt(meta.getLore().get(0).split(" ")[3]);
+		PlayerInfo playerInfo = Minekov.PLAYERS.get(player.getUniqueId());
+		if (playerInfo.getGold() < price)
+		{
+			player.sendMessage("구입하고자 하는 물품의 가격이 소지한 골드보다 비싸 구매할 수 없습니다.");
+			return;
+		}
+		if (isShift) item.setAmount(SHIFT_CLICK);
+		meta.setLore(null);
+		item.setItemMeta(meta);
+		Minekov.INVENTORYPAGEMANAGER.getInventoryPages().get(player.getUniqueId().toString()).AddItem(item);
+		playerInfo.addGold(-price);
+		player.sendMessage("아이템 " + item.getType() + " " + (isShift ? SHIFT_CLICK : CLICK) + "개를 " + price + "골드에 구매하였습니다.");
+		player.sendMessage("구매한 아이템은 /" + Commands.COMMANDS[9] + " 명령어로 받을 수 있습니다.");
+		playerInfo.UpdateBoard();
+	}
+
 	public Inventory getShop()
 	{
 		return SHOP;
-	}
-
-	public ArrayList<InventoryPage> getShopPage()
-	{
-		return SHOP_PAGE;
 	}
 
 	@Override

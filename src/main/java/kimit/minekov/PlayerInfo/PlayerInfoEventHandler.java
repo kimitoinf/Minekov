@@ -28,7 +28,7 @@ public class PlayerInfoEventHandler implements Listener
 		if (count > 0)
 		{
 			player.sendMessage(ChatColor.BOLD + "수신함에 받지 않은 아이템이 " + count + "종류 있습니다.");
-			player.sendMessage(ChatColor.BOLD + "/" + Commands.COMMANDS[2] + " 명령어로 받을 수 있습니다.");
+			player.sendMessage(ChatColor.BOLD + "/" + Commands.COMMANDS[9] + " 명령어로 받을 수 있습니다.");
 		}
 		PlayerInfo playerInfo = Minekov.PLAYERS.get(player.getUniqueId());
 		if (playerInfo.isInRaid())
