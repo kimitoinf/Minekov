@@ -22,11 +22,13 @@ public class IslandEventHandler implements Listener
 			world.getBlockAt(0, 100, 0).setType(Material.BEDROCK);
 			world.setSpawnLocation(location);
 			world.setDifficulty(Difficulty.PEACEFUL);
+			world.setTime(0);
+			world.setStorm(false);
+			world.setThundering(false);
 			world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
 			world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
 			world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
 			world.setGameRule(GameRule.KEEP_INVENTORY, true);
-			world.setTime(0);
 			player.teleport(location);
 			player.setBedSpawnLocation(location);
 		}

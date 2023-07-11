@@ -60,3 +60,7 @@ commands:
     description: Open shop.
     usage: /<command>
     permission: minekov.shop
+  mob:
+    description: Set mob spawn area.
+    usage: /<command> <first|last> <x> <y> <z>
+    permission: minekov.admin.mob
