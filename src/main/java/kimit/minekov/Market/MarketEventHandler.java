@@ -69,7 +69,7 @@ public class MarketEventHandler implements Listener
 			else if (count > 1)
 			{
 				player.sendMessage("판매하고자 하는 아이템을 인벤토리 한 칸에 올려놔 주십시오.");
-				player.sendMessage("이전에 올려놓은 아이템은 /" + Commands.COMMANDS[2] + " 명령어로 다시 받을 수 있습니다.");
+				player.sendMessage("이전에 올려놓은 아이템은 /" + Commands.COMMANDS[9] + " 명령어로 다시 받을 수 있습니다.");
 				for (ItemStack loop : items)
 					Minekov.INVENTORYPAGEMANAGER.getInventoryPages().get(player.getUniqueId().toString()).AddItem(loop);
 			}
@@ -111,7 +111,7 @@ public class MarketEventHandler implements Listener
 	private void CancelSell(Player player)
 	{
 		player.sendMessage("시장 판매 등록을 취소했습니다.");
-		player.sendMessage("판매하려던 아이템은 /" + Commands.COMMANDS[2] + " 명령어로 다시 받을 수 있습니다.");
+		player.sendMessage("판매하려던 아이템은 /" + Commands.COMMANDS[9] + " 명령어로 다시 받을 수 있습니다.");
 		for (ItemStack loop : Minekov.PLAYERS.get(player.getUniqueId()).MarketSell)
 			Minekov.INVENTORYPAGEMANAGER.getInventoryPages().get(player.getUniqueId().toString()).AddItem(loop);
 		Minekov.PLAYERS.get(player.getUniqueId()).OnMarketSell = false;
