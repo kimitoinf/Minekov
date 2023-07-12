@@ -68,3 +68,7 @@ commands:
     description: Set RaidInitializer true or false.
     usage: /<command> <true|false>
     permission: minekov.admin.initializer
+  menu:
+    description: Open menu.
+    usage: /<command>
+    permission: minekov.menu

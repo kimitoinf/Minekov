@@ -1,11 +1,10 @@
 package kimit.minekov.Shop;
 
-import kimit.minekov.Commands;
+import kimit.minekov.Command.Commands;
 import kimit.minekov.Minekov;
 import kimit.minekov.PlayerInfo.PlayerInfo;
 import kimit.minekov.Raid.RaidConfig;
 import kimit.minekov.Util.ConfigFile.ConfigFileProvider;
-import kimit.minekov.Util.InventoryPage.InventoryPage;
 import kimit.minekov.Util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

@@ -1,10 +1,10 @@
 package kimit.minekov;
 
-import de.tr7zw.nbtapi.NBTCompound;
-import de.tr7zw.nbtapi.NBTItem;
+import kimit.minekov.Command.Commands;
 import kimit.minekov.Island.IslandEventHandler;
 import kimit.minekov.Market.Market;
 import kimit.minekov.Market.MarketEventHandler;
+import kimit.minekov.Menu.MenuEventHandler;
 import kimit.minekov.PlayerInfo.PlayerInfo;
 import kimit.minekov.PlayerInfo.PlayerInfoEventHandler;
 import kimit.minekov.Raid.RaidConfig;
@@ -39,7 +39,7 @@ public final class Minekov extends JavaPlugin
 	public static RaidConfig RAIDCONFIG;
 	public static RaidInitializer Initializer;
 	public static Shop Shop;
-	private final Listener[] EVENTHANDLERS = {new PlayerInfoEventHandler(), new InventoryPageEventHandler(), new MarketEventHandler(), new IslandEventHandler(), new RaidEventHandler(), new ShopEventHandler()};
+	private final Listener[] EVENTHANDLERS = {new PlayerInfoEventHandler(), new InventoryPageEventHandler(), new MarketEventHandler(), new IslandEventHandler(), new RaidEventHandler(), new ShopEventHandler(), new MenuEventHandler()};
 
 	@Override
 	public void onEnable()

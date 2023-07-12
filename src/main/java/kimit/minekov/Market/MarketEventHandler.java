@@ -1,6 +1,6 @@
 package kimit.minekov.Market;
 
-import kimit.minekov.Commands;
+import kimit.minekov.Command.Commands;
 import kimit.minekov.Minekov;
 import kimit.minekov.Util.InventoryPage.InventoryPage;
 import kimit.minekov.Util.Util;

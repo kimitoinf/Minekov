@@ -32,13 +32,13 @@ public class RaidInitializer
 
 	public void Start(int raidTime, RaidPoint loots)
 	{
-		if (!Initializing)
-			return;
 		new BukkitRunnable()
 		{
 			@Override
 			public void run()
 			{
+				if (!Initializing)
+					return;
 				for (Location location : loots.RaidPointList)
 				{
 					Block block = location.getBlock();
