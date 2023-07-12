@@ -18,8 +18,9 @@ public class RaidInitializer
 	private final Plugin PLUGIN;
 	private final Location First;
 	private final Location Last;
+	public static boolean Initializing = false;
 	public static final EntityType[] MOBS = {
-			EntityType.ZOMBIE, EntityType.CREEPER, EntityType.SKELETON, EntityType.WITHER_SKELETON, EntityType.STRAY, EntityType.HUSK, EntityType.VINDICATOR, EntityType.PILLAGER, EntityType.RAVAGER, EntityType.ILLUSIONER, EntityType.PIGLIN, EntityType.PIGLIN_BRUTE
+			EntityType.ZOMBIE, EntityType.CREEPER, EntityType.SKELETON/*, EntityType.WITHER_SKELETON*/, EntityType.STRAY, EntityType.HUSK, EntityType.CAVE_SPIDER, EntityType.VINDICATOR, EntityType.PILLAGER, EntityType.RAVAGER, EntityType.ILLUSIONER/*, EntityType.PIGLIN, EntityType.PIGLIN_BRUTE*/
 	};
 
 	public RaidInitializer(String plugin)
@@ -31,6 +32,8 @@ public class RaidInitializer
 
 	public void Start(int raidTime, RaidPoint loots)
 	{
+		if (!Initializing)
+			return;
 		new BukkitRunnable()
 		{
 			@Override

@@ -2,6 +2,7 @@ package kimit.minekov;
 
 import kimit.minekov.Market.Market;
 import kimit.minekov.PlayerInfo.PlayerInfo;
+import kimit.minekov.Raid.RaidInitializer;
 import kimit.minekov.Raid.RaidLoot;
 import kimit.minekov.Raid.RaidPoint;
 import kimit.minekov.Util.Util;
@@ -19,7 +20,7 @@ import org.bukkit.inventory.Inventory;
 
 public class Commands implements CommandExecutor
 {
-	public static final String[] COMMANDS = {"spawn", "escape", "loot", "raid", "getgold", "setgold", "gold", "lootitem", "lootchest", "receive", "market", "sell", "shop", "mob"};
+	public static final String[] COMMANDS = {"spawn", "escape", "loot", "raid", "getgold", "setgold", "gold", "lootitem", "lootchest", "receive", "market", "sell", "shop", "mob", "initializer"};
 	public static final Executor[] EXECUTORS = {new RaidPointExecutor(Minekov.RAIDSPAWN), new RaidPointExecutor(Minekov.RAIDESCAPE), new RaidPointExecutor(Minekov.RAIDLOOT),
 			new Executor()
 			{
@@ -230,6 +231,21 @@ public class Commands implements CommandExecutor
 					if (args[0].equals("first")) Minekov.RAIDCONFIG.V_FIRST_SPAWN_POINT = new Location(Bukkit.getWorlds().get(0), Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
 					else Minekov.RAIDCONFIG.V_LAST_SPAWN_POINT = new Location(Bukkit.getWorlds().get(0), Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
 					sender.sendMessage("Spawn area point was saved.");
+				}
+			},
+			new Executor()
+			{
+				@Override
+				public void Run(CommandSender sender, String[] args)
+				{
+					if (args.length != 1 || !args[0].equals("false") && !args[0].equals("true"))
+					{
+						sender.sendMessage(ARGUMENTS_ERROR);
+						return;
+					}
+					if (args[0].equals("false")) RaidInitializer.Initializing = false;
+					else RaidInitializer.Initializing = true;
+					sender.sendMessage("RaidInitializer.Initializing is now " + RaidInitializer.Initializing);
 				}
 			}
 	};
