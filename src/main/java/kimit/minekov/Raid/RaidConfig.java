@@ -2,6 +2,7 @@ package kimit.minekov.Raid;
 
 import kimit.minekov.Util.ConfigFile.ConfigFileProvider;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 
 public class RaidConfig extends ConfigFileProvider
@@ -41,6 +42,11 @@ public class RaidConfig extends ConfigFileProvider
 	public final double[][] V_DURABILITY_WEAPON_MATERIAL = new double[WEAPON_MATERIAL.length][RANK.length];
 	public final double[][] V_DURABILITY_ARMOR_MATERIAL = new double[ARMOR_MATERIAL.length][RANK.length];
 	public final double[][] V_DURABILITY_PROJECTILE_MATERIAL = new double[PROJECTILE_MATERIAL.length][RANK.length];
+	public static final String MOBS_PER_BLOCK = "MobsPerBlock";
+	public final double V_MOBS_PER_BLOCK;
+	public static final String SPAWN_AREA = "SpawnArea";
+	public Location V_FIRST_SPAWN_POINT;
+	public Location V_LAST_SPAWN_POINT;
 
 	public RaidConfig(String filename)
 	{
@@ -49,6 +55,9 @@ public class RaidConfig extends ConfigFileProvider
 		V_RAID_TIME = CONFIG.getInt(RAID_TIME);
 		V_LOOTING_TIME = CONFIG.getInt(LOOTING_TIME);
 		V_ESCAPE_TIME = CONFIG.getInt(ESCAPE_TIME);
+		V_MOBS_PER_BLOCK = CONFIG.getDouble(MOBS_PER_BLOCK);
+		V_FIRST_SPAWN_POINT = CONFIG.getLocation(SPAWN_AREA + DOT + 0);
+		V_LAST_SPAWN_POINT = CONFIG.getLocation(SPAWN_AREA + DOT + 1);
 
 		for (int loop = 0; loop != MAX_ESCAPE_SPAWN; loop++)
 			V_ESCAPE_SPAWN_TIME[loop] = CONFIG.getDouble(ESCAPE_SPAWN_TIME + DOT + loop);
@@ -86,6 +95,9 @@ public class RaidConfig extends ConfigFileProvider
 		CONFIG.set(RAID_TIME, V_RAID_TIME);
 		CONFIG.set(LOOTING_TIME, V_LOOTING_TIME);
 		CONFIG.set(ESCAPE_TIME, V_ESCAPE_TIME);
+		CONFIG.set(MOBS_PER_BLOCK, V_MOBS_PER_BLOCK);
+		CONFIG.set(SPAWN_AREA + DOT + 0, V_FIRST_SPAWN_POINT);
+		CONFIG.set(SPAWN_AREA + DOT + 1, V_LAST_SPAWN_POINT);
 
 		for (int loop = 0; loop != MAX_ESCAPE_SPAWN; loop++)
 			CONFIG.set(ESCAPE_SPAWN_TIME + DOT + loop, V_ESCAPE_SPAWN_TIME[loop]);

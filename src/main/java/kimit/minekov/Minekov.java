@@ -37,7 +37,7 @@ public final class Minekov extends JavaPlugin
 	public static final String RAIDFOLDER = File.separator + "Raid";
 	public static RaidPoint RAIDSPAWN, RAIDESCAPE, RAIDLOOT;
 	public static RaidConfig RAIDCONFIG;
-	private RaidInitializer Initializer;
+	public static RaidInitializer Initializer;
 	public static Shop Shop;
 	private final Listener[] EVENTHANDLERS = {new PlayerInfoEventHandler(), new InventoryPageEventHandler(), new MarketEventHandler(), new IslandEventHandler(), new RaidEventHandler(), new ShopEventHandler()};
 

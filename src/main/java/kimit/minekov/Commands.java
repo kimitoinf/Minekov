@@ -2,6 +2,7 @@ package kimit.minekov;
 
 import kimit.minekov.Market.Market;
 import kimit.minekov.PlayerInfo.PlayerInfo;
+import kimit.minekov.Raid.RaidInitializer;
 import kimit.minekov.Raid.RaidLoot;
 import kimit.minekov.Raid.RaidPoint;
 import kimit.minekov.Util.Util;
@@ -19,7 +20,7 @@ import org.bukkit.inventory.Inventory;
 
 public class Commands implements CommandExecutor
 {
-	public static final String[] COMMANDS = {"spawn", "escape", "loot", "raid", "getgold", "setgold", "gold", "lootitem", "lootchest", "receive", "market", "sell", "shop"};
+	public static final String[] COMMANDS = {"spawn", "escape", "loot", "raid", "getgold", "setgold", "gold", "lootitem", "lootchest", "receive", "market", "sell", "shop", "mob", "initializer"};
 	public static final Executor[] EXECUTORS = {new RaidPointExecutor(Minekov.RAIDSPAWN), new RaidPointExecutor(Minekov.RAIDESCAPE), new RaidPointExecutor(Minekov.RAIDLOOT),
 			new Executor()
 			{
@@ -28,6 +29,11 @@ public class Commands implements CommandExecutor
 				{
 					if (sender instanceof Player)
 					{
+						if (Minekov.PLAYERS.get(((Player)sender).getUniqueId()).isInRaid())
+						{
+							sender.sendMessage(INRAID_ERROR);
+							return;
+						}
 						Player player = (Player)sender;
 						if (Minekov.RAIDSPAWN.RaidPointList.size() == 0)
 							player.sendMessage("Error: No raid spawn point. contact admin.");
@@ -146,6 +152,11 @@ public class Commands implements CommandExecutor
 				{
 					if (sender instanceof Player)
 					{
+						if (Minekov.PLAYERS.get(((Player)sender).getUniqueId()).isInRaid())
+						{
+							sender.sendMessage(INRAID_ERROR);
+							return;
+						}
 						Player player = (Player)sender;
 						Minekov.INVENTORYPAGEMANAGER.getInventoryPages().get(player.getUniqueId().toString()).OpenInventory(player);
 					}
@@ -157,7 +168,14 @@ public class Commands implements CommandExecutor
 				public void Run(CommandSender sender, String[] args)
 				{
 					if (sender instanceof Player)
-						Minekov.MARKET.Open((Player)sender);
+					{
+						if (Minekov.PLAYERS.get(((Player)sender).getUniqueId()).isInRaid())
+						{
+							sender.sendMessage(INRAID_ERROR);
+							return;
+						}
+						Minekov.MARKET.Open((Player) sender);
+					}
 				}
 			},
 			new Executor()
@@ -167,6 +185,11 @@ public class Commands implements CommandExecutor
 				{
 					if (sender instanceof Player)
 					{
+						if (Minekov.PLAYERS.get(((Player)sender).getUniqueId()).isInRaid())
+						{
+							sender.sendMessage(INRAID_ERROR);
+							return;
+						}
 						Player player = (Player)sender;
 						if (Minekov.PLAYERS.get(player.getUniqueId()).OnMarketSell)
 						{
@@ -183,8 +206,46 @@ public class Commands implements CommandExecutor
 				@Override
 				public void Run(CommandSender sender, String[] args)
 				{
-					if (sender instanceof Player) ((Player)sender).openInventory(Minekov.Shop.getShop());
+					if (sender instanceof Player)
+					{
+						if (Minekov.PLAYERS.get(((Player)sender).getUniqueId()).isInRaid())
+						{
+							sender.sendMessage(INRAID_ERROR);
+							return;
+						}
+						((Player)sender).openInventory(Minekov.Shop.getShop());
+					}
 					else sender.sendMessage(NOT_PLAYER_ERROR);
+				}
+			},
+			new Executor()
+			{
+				@Override
+				public void Run(CommandSender sender, String[] args)
+				{
+					if (args.length != 4 || !Util.IsNumberic(args[1]) || !Util.IsNumberic(args[2]) || !Util.IsNumberic(args[3]) || !args[0].equals("first") && !args[0].equals("last"))
+					{
+						sender.sendMessage(ARGUMENTS_ERROR);
+						return;
+					}
+					if (args[0].equals("first")) Minekov.RAIDCONFIG.V_FIRST_SPAWN_POINT = new Location(Bukkit.getWorlds().get(0), Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+					else Minekov.RAIDCONFIG.V_LAST_SPAWN_POINT = new Location(Bukkit.getWorlds().get(0), Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+					sender.sendMessage("Spawn area point was saved.");
+				}
+			},
+			new Executor()
+			{
+				@Override
+				public void Run(CommandSender sender, String[] args)
+				{
+					if (args.length != 1 || !args[0].equals("false") && !args[0].equals("true"))
+					{
+						sender.sendMessage(ARGUMENTS_ERROR);
+						return;
+					}
+					if (args[0].equals("false")) RaidInitializer.Initializing = false;
+					else RaidInitializer.Initializing = true;
+					sender.sendMessage("RaidInitializer.Initializing is now " + RaidInitializer.Initializing);
 				}
 			}
 	};
@@ -204,6 +265,7 @@ abstract class Executor
 {
 	protected static final String ARGUMENTS_ERROR = "Invalid arguments.";
 	protected static final String NOT_PLAYER_ERROR = "Only player can execute this command.";
+	protected static final String INRAID_ERROR = "레이드 중에는 이 명령어를 사용할 수 없습니다.";
 
 	abstract public void Run(CommandSender sender, String[] args);
 }
