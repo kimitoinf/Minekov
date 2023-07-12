@@ -1,7 +1,7 @@
 package kimit.minekov.Market;
 
 import de.tr7zw.nbtapi.NBTItem;
-import kimit.minekov.Commands;
+import kimit.minekov.Command.Commands;
 import kimit.minekov.Minekov;
 import kimit.minekov.PlayerInfo.PlayerInfo;
 import kimit.minekov.Util.ConfigFile.ConfigFile;

@@ -1,10 +1,11 @@
-package kimit.minekov;
+package kimit.minekov.Command;
 
 import kimit.minekov.Market.Market;
+import kimit.minekov.Menu.Menu;
+import kimit.minekov.Minekov;
 import kimit.minekov.PlayerInfo.PlayerInfo;
 import kimit.minekov.Raid.RaidInitializer;
 import kimit.minekov.Raid.RaidLoot;
-import kimit.minekov.Raid.RaidPoint;
 import kimit.minekov.Util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,7 +21,7 @@ import org.bukkit.inventory.Inventory;
 
 public class Commands implements CommandExecutor
 {
-	public static final String[] COMMANDS = {"spawn", "escape", "loot", "raid", "getgold", "setgold", "gold", "lootitem", "lootchest", "receive", "market", "sell", "shop", "mob", "initializer"};
+	public static final String[] COMMANDS = {"spawn", "escape", "loot", "raid", "getgold", "setgold", "gold", "lootitem", "lootchest", "receive", "market", "sell", "shop", "mob", "initializer", "menu"};
 	public static final Executor[] EXECUTORS = {new RaidPointExecutor(Minekov.RAIDSPAWN), new RaidPointExecutor(Minekov.RAIDESCAPE), new RaidPointExecutor(Minekov.RAIDLOOT),
 			new Executor()
 			{
@@ -247,6 +248,23 @@ public class Commands implements CommandExecutor
 					else RaidInitializer.Initializing = true;
 					sender.sendMessage("RaidInitializer.Initializing is now " + RaidInitializer.Initializing);
 				}
+			},
+			new Executor()
+			{
+				@Override
+				public void Run(CommandSender sender, String[] args)
+				{
+					if (sender instanceof Player)
+					{
+						if (Minekov.PLAYERS.get(((Player)sender).getUniqueId()).isInRaid())
+						{
+							sender.sendMessage(INRAID_ERROR);
+							return;
+						}
+						Menu menu = new Menu();
+						((Player)sender).openInventory(menu.getMenu());
+					}
+				}
 			}
 	};
 
@@ -258,48 +276,5 @@ public class Commands implements CommandExecutor
 				EXECUTORS[loop].Run(sender, args);
 
 		return true;
-	}
-}
-
-abstract class Executor
-{
-	protected static final String ARGUMENTS_ERROR = "Invalid arguments.";
-	protected static final String NOT_PLAYER_ERROR = "Only player can execute this command.";
-	protected static final String INRAID_ERROR = "레이드 중에는 이 명령어를 사용할 수 없습니다.";
-
-	abstract public void Run(CommandSender sender, String[] args);
-}
-
-class RaidPointExecutor extends Executor
-{
-	private final RaidPoint POINTS;
-
-	public RaidPointExecutor(RaidPoint points)
-	{
-		POINTS = points;
-	}
-
-	@Override
-	public void Run(CommandSender sender, String[] args)
-	{
-		if (args.length != 3 || !Util.IsNumberic(args[0]) || !Util.IsNumberic(args[1]) || !Util.IsNumberic(args[2]))
-		{
-			sender.sendMessage(ARGUMENTS_ERROR);
-			return;
-		}
-		int x = Integer.parseInt(args[0]);
-		int y = Integer.parseInt(args[1]);
-		int z = Integer.parseInt(args[2]);
-		for (Location loop : POINTS.RaidPointList)
-		{
-			if (loop.getBlockX() == x && loop.getBlockY() == y && loop.getBlockZ() == z)
-			{
-				sender.sendMessage("Already registered location.");
-				return;
-			}
-		}
-		Location location = new Location(Bukkit.getWorlds().get(0), x, y, z);
-		POINTS.RaidPointList.add(location);
-		sender.sendMessage("Registered location " + location);
 	}
 }
