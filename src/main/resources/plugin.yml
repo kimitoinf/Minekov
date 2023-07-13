@@ -72,3 +72,7 @@ commands:
     description: Open menu.
     usage: /<command>
     permission: minekov.menu
+  points:
+    description: Set spawn, loot, escape points.
+    usage: /<command> <clear>
+    permission: minekov.admin.points

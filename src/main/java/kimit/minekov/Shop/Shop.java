@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionData;
@@ -131,6 +132,7 @@ public class Shop extends ConfigFileProvider
 				Material material = SHOP_ITEM[loop][loop2];
 				item = new ItemStack(material);
 				meta = item.getItemMeta();
+				Damageable durability = (Damageable)meta;
 				int price = 0;
 
 				switch (loop)
@@ -138,12 +140,18 @@ public class Shop extends ConfigFileProvider
 					case 0:
 					case 2:
 						price = (int)Math.ceil(PRICE_COEFFICIENT * GetValue(material, Minekov.RAIDCONFIG.V_DURABILITY_WEAPON_MATERIAL[Util.IsContain(material.name(), RaidConfig.WEAPON_MATERIAL)], ITEM_STAT[loop][loop2]));
+						durability.setDamage((int)(material.getMaxDurability() * (1 - Minekov.RAIDCONFIG.V_DURABILITY_WEAPON_MATERIAL[Util.IsContain(material.name(), RaidConfig.WEAPON_MATERIAL)][0])));
+						item.setItemMeta(durability);
 						break;
 					case 1:
 						price = (int)Math.ceil(PRICE_COEFFICIENT * GetValue(material, Minekov.RAIDCONFIG.V_DURABILITY_PROJECTILE_MATERIAL[Util.IsContain(material.name(), RaidConfig.PROJECTILE_MATERIAL)], ITEM_STAT[loop][loop2]));
+						durability.setDamage((int)(material.getMaxDurability() * (1 - Minekov.RAIDCONFIG.V_DURABILITY_PROJECTILE_MATERIAL[Util.IsContain(material.name(), RaidConfig.PROJECTILE_MATERIAL)][1])));
+						item.setItemMeta(durability);
 						break;
 					case 3:
 						price = 4 * (int)Math.ceil(PRICE_COEFFICIENT * GetValue(material, Minekov.RAIDCONFIG.V_DURABILITY_ARMOR_MATERIAL[Util.IsContain(material.name(), RaidConfig.ARMOR_MATERIAL)], ITEM_STAT[loop][loop2]));
+						durability.setDamage((int)(material.getMaxDurability() * (1 - Minekov.RAIDCONFIG.V_DURABILITY_ARMOR_MATERIAL[Util.IsContain(material.name(), RaidConfig.ARMOR_MATERIAL)][0])));
+						item.setItemMeta(durability);
 						break;
 					case 5:
 						PotionMeta potion = (PotionMeta)meta;
@@ -164,6 +172,7 @@ public class Shop extends ConfigFileProvider
 				lore.add("SHIFT + 좌클릭으로 " + SHIFT_CLICK + "개 구매");
 				lore.add("우클릭으로 " + CLICK + "개 판매");
 				lore.add("SHIFT + 우클릭으로 모두 판매");
+				meta = item.getItemMeta();
 				meta.setLore(lore);
 				item.setItemMeta(meta);
 				Minekov.INVENTORYPAGEMANAGER.getInventoryPages().get(SHOP_NAME[loop]).AddItem(item);
