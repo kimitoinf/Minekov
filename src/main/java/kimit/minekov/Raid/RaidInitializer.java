@@ -16,8 +16,8 @@ import java.util.Random;
 public class RaidInitializer
 {
 	private final Plugin PLUGIN;
-	private final Location First;
-	private final Location Last;
+	private Location First;
+	private Location Last;
 	public static boolean Initializing = false;
 	public static final EntityType[] MOBS = {
 			EntityType.ZOMBIE, EntityType.CREEPER, EntityType.SKELETON/*, EntityType.WITHER_SKELETON*/, EntityType.STRAY, EntityType.HUSK, EntityType.CAVE_SPIDER, EntityType.VINDICATOR, EntityType.PILLAGER, EntityType.RAVAGER, EntityType.ILLUSIONER/*, EntityType.PIGLIN, EntityType.PIGLIN_BRUTE*/
@@ -37,6 +37,8 @@ public class RaidInitializer
 			@Override
 			public void run()
 			{
+				First = Minekov.RAIDCONFIG.V_FIRST_SPAWN_POINT;
+				Last = Minekov.RAIDCONFIG.V_LAST_SPAWN_POINT;
 				if (!Initializing)
 					return;
 				for (Location location : loots.RaidPointList)
@@ -66,5 +68,15 @@ public class RaidInitializer
 				Minekov.LOGGER.Log("Raid initialized.");
 			}
 		}.runTaskTimer(PLUGIN, 0, raidTime * 20L);
+	}
+
+	public Location getFirst()
+	{
+		return First;
+	}
+
+	public Location getLast()
+	{
+		return Last;
 	}
 }

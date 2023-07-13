@@ -7,11 +7,9 @@ import kimit.minekov.PlayerInfo.PlayerInfo;
 import kimit.minekov.Raid.RaidInitializer;
 import kimit.minekov.Raid.RaidLoot;
 import kimit.minekov.Util.Util;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,9 +17,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Commands implements CommandExecutor
 {
-	public static final String[] COMMANDS = {"spawn", "escape", "loot", "raid", "getgold", "setgold", "gold", "lootitem", "lootchest", "receive", "market", "sell", "shop", "mob", "initializer", "menu"};
+	public static final String[] COMMANDS = {"spawn", "escape", "loot", "raid", "getgold", "setgold", "gold", "lootitem", "lootchest", "receive", "market", "sell", "shop", "mob", "initializer", "menu", "points"};
 	public static final Executor[] EXECUTORS = {new RaidPointExecutor(Minekov.RAIDSPAWN), new RaidPointExecutor(Minekov.RAIDESCAPE), new RaidPointExecutor(Minekov.RAIDLOOT),
 			new Executor()
 			{
@@ -264,6 +265,65 @@ public class Commands implements CommandExecutor
 						Menu menu = new Menu();
 						((Player)sender).openInventory(menu.getMenu());
 					}
+				}
+			},
+			new Executor()
+			{
+				@Override
+				public void Run(CommandSender sender, String[] args)
+				{
+					if (Minekov.Initializer.getFirst() == null || Minekov.Initializer.getLast() == null)
+					{
+						sender.sendMessage("Area isn't set.");
+						return;
+					}
+					Location first = Minekov.Initializer.getFirst();
+					Location last = Minekov.Initializer.getLast();
+					Set<Chunk> chunks = new HashSet<>();
+					int minX = Math.min(first.getBlockX(), last.getBlockX());
+					int maxX = Math.max(first.getBlockX(), last.getBlockX());
+					int minZ = Math.min(first.getBlockZ(), last.getBlockZ());
+					int maxZ = Math.max(first.getBlockZ(), last.getBlockZ());
+					int chests = 0;
+					int spawns = 0;
+					int escapes = 0;
+					for (int x = minX; x <= maxX; x++)
+					{
+						for (int z = minZ; z <= maxZ; z++)
+						{
+							Chunk chunk = new Location(first.getWorld(), x, 0, z).getChunk();
+							if (!chunk.isLoaded()) chunk.load();
+							chunks.add(chunk);
+							Block block = new Location(first.getWorld(), x, first.getBlockY(), z).getBlock();
+							Material material = block.getType();
+							if (material.equals(Material.WHITE_CONCRETE))
+							{
+								spawns++;
+								EXECUTORS[0].Run(sender, new String[]{Integer.toString(x), Integer.toString(first.getBlockY()), Integer.toString(z)});
+								if (args.length == 1 && args[0].equals("clear"))
+									block.setType(Material.AIR);
+							}
+							else if(material.equals(Material.GREEN_CONCRETE))
+							{
+								escapes++;
+								EXECUTORS[1].Run(sender, new String[]{Integer.toString(x), Integer.toString(first.getBlockY()), Integer.toString(z)});
+								if (args.length == 1 && args[0].equals("clear"))
+									block.setType(Material.AIR);
+							}
+						}
+					}
+					for (Chunk loop : chunks)
+					{
+						for (BlockState loop2 : loop.getTileEntities())
+						{
+							if (loop2 instanceof Chest)
+							{
+								chests++;
+								EXECUTORS[2].Run(sender, new String[]{Integer.toString(loop2.getLocation().getBlockX()), Integer.toString(loop2.getLocation().getBlockY()), Integer.toString(loop2.getLocation().getBlockZ())});
+							}
+						}
+					}
+					sender.sendMessage("Loots : " + chests + ", Spawns : " + spawns + ", Escapes : " + escapes);
 				}
 			}
 	};
